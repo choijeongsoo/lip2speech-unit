@@ -1,0 +1,108 @@
+# @package _group_
+
+common:
+  fp16: false
+  amp: true
+  log_format: json
+  log_interval: 200
+  tensorboard_logdir: tblog
+  seed: 1337
+  user_dir: ???
+
+checkpoint:
+  save_interval: 1
+  keep_interval_updates: 1
+  no_epoch_checkpoints: true
+  best_checkpoint_metric: accuracy
+  maximize_best_checkpoint_metric: true
+
+distributed_training:
+  ddp_backend: c10d
+  find_unused_parameters: true
+  distributed_world_size: 1 #8
+  # distributed_port: 29672
+  nprocs_per_node: 1 #8
+  # distributed_init_method: tcp://localhost:29672
+
+task:
+  _name: lip2speech
+  is_s2s: false
+  data: ???
+  label_dir: ???
+  label_rate: 50
+  sample_rate: 25
+  normalize: true  # must be consistent with pre-training
+  labels: ["unt"]
+  single_target: true
+  fine_tuning: true
+  stack_order_audio: 4
+  max_sample_size: 600
+  modalities: ["video"]
+  image_aug: true
+  pad_audio: true
+  random_crop: false
+  time_mask: true
+  random_erase: true
+
+dataset:
+  num_workers: 3
+  max_tokens: 3600
+  validate_after_updates: 0
+  validate_interval: 1
+  train_subset: train
+  valid_subset: valid
+
+criterion:
+  _name: multi_target
+  report_accuracy: true
+  label_smoothing: 0.1
+  mel_weight: 10
+
+optimization:
+  max_update: 150000
+  lr: [0.001]
+  sentence_avg: true
+  update_freq: [8] #[1]
+
+optimizer:
+  _name: adam
+  adam_betas: (0.9,0.98)
+  adam_eps: 1e-08
+  weight_decay: 0.01
+
+lr_scheduler:
+  _name: cosine
+  warmup_updates: 10000
+
+model:
+  _name: multi_target
+  apply_mask: false
+  layerdrop: 0.1
+  dropout: 0.0
+  activation_dropout: 0.1
+  attention_dropout: 0.0
+  feature_grad_mult: 1.0
+  freeze_finetune_updates: 0
+  share_decoder_input_output_embed: true
+  use_conformer: true
+
+hydra:
+  job:
+    config:
+      override_dirname:
+        kv_sep: '-'
+        item_sep: '__'
+        exclude_keys:
+          - run
+          - task.data
+          - task.label_dir
+          - model.w2v_path
+          - dataset.train_subset
+          - dataset.valid_subset
+          - criterion.wer_kenlm_model
+          - criterion.wer_lexicon
+  run:
+    dir: ???
+  sweep:
+    dir: ???
+    subdir: ${hydra.job.config_name}__${hydra.job.override_dirname}
