@@ -2,7 +2,7 @@
 
 Official PyTorch implementation for the following paper:
 > **Intelligible Lip-to-Speech Synthesis with Speech Units**<br>
-> [Jeongsoo Choi](https://scholar.google.com/citations?user=WPcjsEkAAAAJ), [Minsu Kim](https://sites.google.com/view/ms-dot-k), [Yong Man Ro](https://ivylab.kaist.ac.kr/base/people/people1.php)<br>
+> [Jeongsoo Choi](https://choijeongsoo.github.io), [Minsu Kim](https://sites.google.com/view/ms-dot-k), [Yong Man Ro](https://www.ivllab.kaist.ac.kr/people/professor)<br>
 > Interspeech 2023<br>
 > \[[Paper](https://arxiv.org/abs/2305.19603)\] \[[Project](https://choijeongsoo.github.io/lip2speech-unit)\]
 
