@@ -15,7 +15,7 @@ conda activate lip2speech
 pip install torch==1.13.1+cu116 torchvision==0.14.1+cu116 torchaudio==0.13.1 --extra-index-url https://download.pytorch.org/whl/cu116
 pip install -r requirements.txt
 
-git clone https://github.com/choijeongsoo/lip2speech-unit.git
+git clone -b main --single-branch https://github.com/choijeongsoo/lip2speech-unit.git
 cd lip2speech-unit
 git clone https://github.com/facebookresearch/fairseq.git
 cd faireq
@@ -34,7 +34,7 @@ cd ..
 
 #### Speech Units
 * reference: https://github.com/facebookresearch/fairseq/tree/main/examples/textless_nlp/gslm/speech2unit
-- HuBERT Base + KM200
+- 6th layer of HuBERT Base + KM200
 
 #### Speaker Embedding
 * reference: https://github.com/CorentinJ/Real-Time-Voice-Cloning
