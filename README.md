@@ -86,6 +86,10 @@ We provide sample data in 'datasets/lrs3' directory.
      
 </details>
 
+We use the pre-trained `AV-HuBERT Large (LRS3 + VoxCeleb2 (En))` model available from [here](https://facebookresearch.github.io/av_hubert).
+
+For inference, download the checkpoints and place them in the 'checkpoints' directory.
+
 ## Training
 ```
 scripts/${DATASET}/train.sh
