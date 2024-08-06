@@ -64,11 +64,12 @@ class MultiTargetDataset(AVHubertDataset):
             time_mask: bool = False,
             random_erase: bool = False,
     ):
-        self.label_rates = (
-            [label_rates for _ in range(len(label_paths))]
-            if isinstance(label_rates, int)
-            else label_rates
-        )
+        # self.label_rates = (
+        #     [label_rates for _ in range(len(label_paths))]
+        #     if isinstance(label_rates, int)
+        #     else label_rates
+        # )
+        self.label_rates = [-1 for _ in range(len(label_paths))]
         self.modalities = set(modalities)
         self.audio_root, self.names, inds, tot, self.sizes = load_audio_visual(manifest_path, max_keep_sample_size, min_keep_sample_size, frame_rate=sample_rate, label_paths=label_paths, label_rates=self.label_rates)
         self.sample_rate = sample_rate

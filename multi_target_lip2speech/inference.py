@@ -51,6 +51,7 @@ class OverrideConfig(FairseqDataclass):
     modalities: List[str] = field(default_factory=lambda: [""], metadata={'help': 'which modality to use'})
     data: Optional[str] = field(default=None, metadata={'help': 'path to test data directory'})
     label_dir: Optional[str] = field(default=None, metadata={'help': 'path to test label directory'})
+    w2v_path: Optional[str] = field(default=None, metadata={"help": "path to avhubert model"})
 
 @dataclass
 class InferConfig(FairseqDataclass):
@@ -105,7 +106,10 @@ def _main(cfg, output_file):
         logger.addHandler(logging.StreamHandler(sys.stdout))
 
     utils.import_user_module(cfg.common)
-    models, saved_cfg, task = checkpoint_utils.load_model_ensemble_and_task([cfg.common_eval.path])
+    if cfg.override.w2v_path is not None:
+        models, saved_cfg, task = checkpoint_utils.load_model_ensemble_and_task([cfg.common_eval.path], arg_overrides={"w2v_path": cfg.override.w2v_path})
+    else:
+        models, saved_cfg, task = checkpoint_utils.load_model_ensemble_and_task([cfg.common_eval.path])
     models = [model.eval().cuda() for model in models]
 
     saved_cfg.task.modalities = cfg.override.modalities
@@ -187,17 +191,10 @@ def _main(cfg, output_file):
     generator = task.build_generator(
         models, cfg.generation, extra_gen_cls_kwargs=extra_gen_cls_kwargs
     )
-    generator.results_path = cfg.common_eval.results_path
 
     def decode_fn(x):
         symbols_ignore = get_symbols_to_strip_from_output(generator)
         symbols_ignore.add(dictionary.pad())
-
-        ###
-        symbols_ignore.add(dictionary.bos())
-        symbols_ignore.add(dictionary.unk())
-        ###
-
         if hasattr(task.datasets[cfg.dataset.gen_subset].label_processors[0], 'decode'):
             return task.datasets[cfg.dataset.gen_subset].label_processors[0].decode(x, symbols_ignore)
         chars = dictionary.string(x, extra_symbols_to_ignore=symbols_ignore)
@@ -229,7 +226,6 @@ def _main(cfg, output_file):
             prefix_tokens=prefix_tokens,
             constraints=constraints,
         )
-        
         num_generated_tokens = sum(len(h[0]["tokens"]) for h in hypos)
         gen_timer.stop(num_generated_tokens)
 

@@ -1,4 +1,4 @@
-/home/js/lip2speech-unit/datasets/lrs3
+../datasets/lrs3
 trainval/gSCSsL3it9Y/50007	video/trainval/gSCSsL3it9Y/50007.mp4	audio/trainval/gSCSsL3it9Y/50007.wav	28	18432
 trainval/gSCSsL3it9Y/50002	video/trainval/gSCSsL3it9Y/50002.mp4	audio/trainval/gSCSsL3it9Y/50002.wav	66	43008
 trainval/jobYTQTgeUE/50013	video/trainval/jobYTQTgeUE/50013.mp4	audio/trainval/jobYTQTgeUE/50013.wav	151	97280

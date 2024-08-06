@@ -1,11 +1,4 @@
 {
-    "code_dict_path": "../datasets/lrs3/label/dict.unt.txt",
-
-    "input_training_file": "../datasets/lrs3/label/train.tsv",
-    "input_validation_file": "../datasets/lrs3/label/valid.tsv",
-
-    "max_keep": 600,
-
     "resblock": "1",
     "num_gpus": 0,
     "batch_size": 16,

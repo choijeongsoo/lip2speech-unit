@@ -114,15 +114,22 @@ def init_worker(queue, arguments):
     state_dict_g = load_checkpoint(cp_g)
     generator.load_state_dict(state_dict_g['generator'])
 
-
     if a.code_file is not None:
-        dataset = [x.strip().split('|') for x in open(a.code_file).readlines()]
-
+        file_list = glob.glob(f"{a.code_file}/*/*/*.txt")
         def parse_code(c):
             c = [int(v) for v in c.split(" ")]
-            return [torch.LongTensor(c).numpy()]
+            return torch.LongTensor(c).numpy()
+        dataset = []
+        for code_path in file_list:
+            mel_path = code_path.replace("/pred_unit/", "/pred_mel/")[:-4]+".npy"
+            spk_emb_path = code_path.replace(f"{a.code_file}/", "../datasets/lrs3/spk_emb/")[:-4]+".npy"
 
-        dataset = [(parse_code(x[1]), None, x[0], None) for x in dataset]
+            code_str = open(code_path).readline().strip()
+            code = parse_code(code_str)
+            mel = np.load(mel_path).transpose(1,0)
+            spk_emb = np.load(spk_emb_path)
+
+            dataset.append([{"code": code, "mel": mel, "spkr": spk_emb}, None, code_path, None])
     else:
         file_list = parse_manifest(a.input_code_file)
         dataset = MelCodeDataset(file_list, -1, h.code_hop_size, h.mel_hop_size, h.n_fft, h.num_mels, h.hop_size, h.win_size,
@@ -149,13 +156,13 @@ def inference(item_index):
     code, gt_audio, filename, _ = dataset[item_index]
     code = {k: torch.from_numpy(v).to(device).unsqueeze(0) for k, v in code.items()}
 
-    fname_out_name = os.path.join("pred_wav", *(filename.split('/')[-2:]))[:-4]
+    fname_out_name = os.path.join("pred_wav", *(filename.split('/')[-3:]))[:-4]
 
     new_code = dict(code)
 
     audio, rtf = generate(h, generator, new_code)
     output_file = os.path.join(a.output_dir, fname_out_name + '.wav')
-    # audio = librosa.util.normalize(audio.astype(np.float32))
+    audio = librosa.util.normalize(audio.astype(np.float32))
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
     write(output_file, h.sampling_rate, audio)
 
@@ -201,13 +208,21 @@ def main():
         return
 
     if a.code_file is not None:
-        dataset = [x.strip().split('|') for x in open(a.code_file).readlines()]
-
+        file_list = glob.glob(f"{a.code_file}/*/*/*.txt")
         def parse_code(c):
             c = [int(v) for v in c.split(" ")]
-            return [torch.LongTensor(c).numpy()]
+            return torch.LongTensor(c).numpy()
+        dataset = []
+        for code_path in file_list:
+            mel_path = code_path.replace("/pred_unit/", "/pred_mel/")[:-4]+".npy"
+            spk_emb_path = code_path.replace(f"{a.code_file}/", "../datasets/lrs3/spk_emb/")[:-4]+".npy"
 
-        dataset = [(parse_code(x[1]), None, x[0], None) for x in dataset]
+            code_str = open(code_path).readline().strip()
+            code = parse_code(code_str)
+            mel = np.load(mel_path).transpose(1,0)
+            spk_emb = np.load(spk_emb_path)
+
+            dataset.append([{"code": code, "mel": mel, "spkr": spk_emb}, None, code_path, None])
     else:
         file_list = parse_manifest(a.input_code_file)
         dataset = MelCodeDataset(file_list, -1, h.code_hop_size, h.mel_hop_size, h.n_fft, h.num_mels, h.hop_size, h.win_size,

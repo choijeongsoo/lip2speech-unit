@@ -1,8 +1,8 @@
 {
-    "code_dict_path": "/home/js/lip2speech-unit/datasets/lrs3/label/dict.unt.txt",
+    "code_dict_path": "../datasets/lrs3/label/dict.unt.txt",
 
-    "input_training_file": "/home/js/lip2speech-unit/datasets/lrs3/label/train.tsv",
-    "input_validation_file": "/home/js/lip2speech-unit/datasets/lrs3/label/valid.tsv",
+    "input_training_file": "../datasets/lrs3/label/train.tsv",
+    "input_validation_file": "../datasets/lrs3/label/valid.tsv",
 
     "max_keep": 600,
 
