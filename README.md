@@ -12,17 +12,18 @@ Official PyTorch implementation for the following paper:
 ```
 conda create -y -n lip2speech python=3.10
 conda activate lip2speech
-pip install torch==1.13.1+cu116 torchvision==0.14.1+cu116 torchaudio==0.13.1 --extra-index-url https://download.pytorch.org/whl/cu116
-pip install -r requirements.txt
 
 git clone -b main --single-branch https://github.com/choijeongsoo/lip2speech-unit.git
 cd lip2speech-unit
+
+pip install torch==1.13.1+cu116 torchvision==0.14.1+cu116 torchaudio==0.13.1 --extra-index-url https://download.pytorch.org/whl/cu116
+pip install -r requirements.txt
+
 git clone https://github.com/facebookresearch/fairseq.git
 cd faireq
 git checkout afc77bd
 pip install -e ./
 cd ..
-
 ```
 
 ## Data Preparation
