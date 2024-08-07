@@ -162,7 +162,7 @@ def inference(item_index):
 
     audio, rtf = generate(h, generator, new_code)
     output_file = os.path.join(a.output_dir, fname_out_name + '.wav')
-    audio = librosa.util.normalize(audio.astype(np.float32))
+    # audio = librosa.util.normalize(audio.astype(np.float32))
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
     write(output_file, h.sampling_rate, audio)
 
