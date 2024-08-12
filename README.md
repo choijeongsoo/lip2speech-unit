@@ -20,7 +20,7 @@ pip install torch==1.13.1+cu116 torchvision==0.14.1+cu116 torchaudio==0.13.1 --e
 pip install -r requirements.txt
 
 git clone https://github.com/facebookresearch/fairseq.git
-cd faireq
+cd fairseq
 git checkout afc77bd
 pip install -e ./
 cd ..
